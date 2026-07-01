@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projection comparative — PEL vs support alternatif — Régis Delhommeau</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --td: #062e28;
+  --dg: #084d3f;
+  --tm: #0a6e5c;
+  --t: #0d8c74;
+  --tl: #12b090;
+  --tp: #8dd4c4;
+  --ink: #111827;
+  --ink60: rgba(17,24,39,0.6);
+  --ink40: rgba(17,24,39,0.4);
+  --surface: #f4faf8;
+  --border: rgba(10,110,92,0.14);
+  --amber: #b8790a;
+  --font: 'Outfit', Arial, sans-serif;
+}
+body { background: #fff; font-family: var(--font); color: var(--ink); }
+.container { max-width: 880px; margin: 0 auto; padding: 48px 32px; }
+
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--t); margin-bottom: 10px; }
+h1 { font-size: 28px; font-weight: 800; color: var(--td); letter-spacing: -0.6px; margin-bottom: 14px; }
+.intro { font-size: 14px; color: var(--ink60); line-height: 1.7; max-width: 660px; margin-bottom: 32px; }
+
+.kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 36px; }
+@media (max-width: 680px) { .kpi-row { grid-template-columns: 1fr; } }
+.kpi { border-radius: 16px; padding: 20px 20px 18px; position: relative; overflow: hidden; }
+.kpi::after { content:''; position:absolute; bottom:-18px; right:-18px; width:70px; height:70px; border-radius:50%; background:rgba(255,255,255,0.08); }
+.kpi-1 { background: linear-gradient(135deg, var(--td), #021a16); }
+.kpi-2 { background: linear-gradient(135deg, var(--tm), var(--dg)); }
+.kpi-3 { background: linear-gradient(135deg, var(--tl), var(--t)); }
+.kpi-label { font-size: 10.5px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+.kpi-value { font-size: 22px; font-weight: 800; color: #fff; }
+.kpi-sub { font-size: 11px; color: rgba(255,255,255,0.75); margin-top: 4px; }
+
+.chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px 30px; margin-bottom: 28px; }
+.chart-card-title { font-size: 16px; font-weight: 700; color: var(--td); margin-bottom: 6px; }
+.chart-card-sub { font-size: 13px; color: var(--ink60); margin-bottom: 20px; line-height: 1.6; }
+.chart-wrap { position: relative; width: 100%; height: 340px; }
+
+.result-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 680px) { .result-row { grid-template-columns: 1fr; } }
+.result-card { border-radius: 16px; padding: 20px 22px; border: 1.5px solid var(--border); }
+.result-card.win { background: linear-gradient(135deg, #eafaf4, #f4faf8); border-color: rgba(18,176,144,0.3); }
+.result-card .rl { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink40); margin-bottom: 6px; }
+.result-card .rv { font-size: 22px; font-weight: 800; color: var(--td); }
+.result-card .rs { font-size: 12px; color: var(--ink60); margin-top: 4px; }
+
+.gain-card {
+  background: linear-gradient(135deg, var(--td) 0%, #021a16 100%);
+  border-radius: 20px; padding: 26px 30px; margin-bottom: 28px;
+  color: #fff; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+}
+.gain-card::after { content:''; position:absolute; top:-40px; right:-40px; width:150px; height:150px; border-radius:50%; background: rgba(141,212,196,0.12); }
+.gain-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--tp); margin-bottom: 8px; position: relative; z-index: 1; }
+.gain-value { font-size: 34px; font-weight: 800; letter-spacing: -0.8px; position: relative; z-index: 1; }
+.gain-sub { font-size: 13px; color: rgba(255,255,255,0.8); margin-top: 6px; position: relative; z-index: 1; }
+.gain-pct-badge {
+  background: rgba(141,212,196,0.15); border: 1px solid rgba(141,212,196,0.35);
+  border-radius: 12px; padding: 14px 22px; text-align: center; position: relative; z-index: 1;
+}
+.gain-pct-value { font-size: 24px; font-weight: 800; color: var(--tp); }
+.gain-pct-label { font-size: 10.5px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
+
+.slider-zone {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 22px 28px; display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.slider-label-group { display: flex; flex-direction: column; gap: 3px; min-width: 170px; }
+.slider-main-label { font-size: 14px; font-weight: 600; color: var(--ink); }
+.slider-hint { font-size: 11px; color: var(--ink40); }
+.slider-control { flex: 1; display: flex; align-items: center; gap: 16px; min-width: 200px; }
+.slider-control input[type=range] {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  height: 5px; border-radius: 3px; outline: none; cursor: pointer;
+  background: linear-gradient(to right,
+    var(--t) 0%, var(--t) var(--pct, 63%),
+    rgba(17,24,39,0.12) var(--pct, 63%), rgba(17,24,39,0.12) 100%);
+}
+.slider-control input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+  background: #fff; border: 3px solid var(--t); cursor: pointer;
+  box-shadow: 0 0 0 5px rgba(13,140,116,0.15);
+}
+.slider-control input[type=range]::-moz-range-thumb {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #fff; border: 3px solid var(--t); cursor: pointer;
+}
+.year-display { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.year-bubble {
+  background: var(--t); color: #fff; font-size: 20px; font-weight: 800;
+  width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+}
+.year-suffix { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink40); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <p class="eyebrow">Patrimy · Audit patrimonial</p>
+  <h1>Projection comparative de votre capital</h1>
+  <p class="intro">Cette projection illustre l'écart de performance entre votre PEL actuel et un support alternatif, sur la base d'un capital identique de 25 000 €, avec effet des intérêts composés sur 20 ans.</p>
+
+  <div class="kpi-row">
+    <div class="kpi kpi-1">
+      <div class="kpi-label">Capital de départ</div>
+      <div class="kpi-value">25 000 €</div>
+      <div class="kpi-sub">Identique sur les deux scénarios</div>
+    </div>
+    <div class="kpi kpi-2">
+      <div class="kpi-label">PEL</div>
+      <div class="kpi-value">3,15 %</div>
+      <div class="kpi-sub">Rendement net / an</div>
+    </div>
+    <div class="kpi kpi-3">
+      <div class="kpi-label">Support alternatif</div>
+      <div class="kpi-value">7 %</div>
+      <div class="kpi-sub">Rendement estimé / an</div>
+    </div>
+  </div>
+
+  <div class="slider-zone">
+    <div class="slider-label-group">
+      <div class="slider-main-label">Horizon de projection</div>
+      <div class="slider-hint">Faites glisser pour choisir la durée</div>
+    </div>
+    <div class="slider-control">
+      <input type="range" id="yearSlider" min="1" max="30" value="20" step="1">
+    </div>
+    <div class="year-display">
+      <div class="year-bubble" id="yearBubble">20</div>
+      <div class="year-suffix">ans</div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-card-title">Évolution du capital dans le temps</div>
+    <div class="chart-card-sub" id="chartSub">À capital de départ identique, l'écart de performance se creuse fortement dans le temps sous l'effet des intérêts composés.</div>
+    <div class="chart-wrap">
+      <canvas id="projChart" role="img" aria-label="Comparaison de la projection du capital entre le PEL à 3,15% et un support alternatif à 7% sur 20 ans"></canvas>
+    </div>
+  </div>
+
+  <div class="gain-card">
+    <div>
+      <div class="gain-label">Gain espéré en choisissant le support alternatif</div>
+      <div class="gain-value" id="gainValue">—</div>
+      <div class="gain-sub" id="gainSub">Écart de capital final par rapport au PEL</div>
+    </div>
+    <div class="gain-pct-badge">
+      <div class="gain-pct-value" id="gainPct">—</div>
+      <div class="gain-pct-label">de capital en plus</div>
+    </div>
+  </div>
+
+  <div class="result-row">
+    <div class="result-card">
+      <div class="rl">Capital projeté — PEL (3,15%)</div>
+      <div class="rv" id="finalPel">—</div>
+      <div class="rs">Dans 20 ans</div>
+    </div>
+    <div class="result-card win">
+      <div class="rl">Capital projeté — Support alternatif (7%)</div>
+      <div class="rv" id="finalAlt">—</div>
+      <div class="rs" id="gainDiff">—</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const CAPITAL = 25000;
+const RATE_PEL = 0.0315;
+const RATE_ALT = 0.07;
+
+function fmt(n) {
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(Math.round(n));
+}
+
+function compute(years) {
+  const labels = [], pelData = [], altData = [];
+  for (let y = 0; y <= years; y++) {
+    labels.push(y === 0 ? "Aujourd'hui" : 'An ' + y);
+    pelData.push(Math.round(CAPITAL * Math.pow(1 + RATE_PEL, y)));
+    altData.push(Math.round(CAPITAL * Math.pow(1 + RATE_ALT, y)));
+  }
+  return { labels, pelData, altData };
+}
+
+let chart;
+
+function buildChart(years) {
+  const { labels, pelData, altData } = compute(years);
+  const ctx = document.getElementById('projChart').getContext('2d');
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Support alternatif (7%)',
+          data: altData,
+          borderColor: '#c0392b',
+          backgroundColor: 'rgba(192,57,43,0.08)',
+          borderWidth: 2.5,
+          pointRadius: 0,
+          pointHoverRadius: 6,
+          pointHoverBackgroundColor: '#c0392b',
+          fill: true,
+          tension: 0.3
+        },
+        {
+          label: 'PEL (3,15%)',
+          data: pelData,
+          borderColor: '#8dd4c4',
+          backgroundColor: 'rgba(141,212,196,0.10)',
+          borderWidth: 2.5,
+          pointRadius: 0,
+          pointHoverRadius: 6,
+          pointHoverBackgroundColor: '#8dd4c4',
+          fill: true,
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: { font: { family: 'Outfit', size: 12 }, color: '#3d4a47', boxWidth: 10, padding: 16 }
+        },
+        tooltip: {
+          backgroundColor: '#ffffff',
+          borderColor: 'rgba(13,140,116,0.3)',
+          borderWidth: 1,
+          titleColor: 'rgba(17,24,39,0.5)',
+          bodyColor: '#111827',
+          titleFont: { family: 'Outfit', size: 11, weight: '500' },
+          bodyFont: { family: 'Outfit', size: 13, weight: '700' },
+          padding: 14,
+          callbacks: {
+            label: ctx => '  ' + ctx.dataset.label + ' : ' + fmt(ctx.parsed.y)
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(17,24,39,0.06)', drawBorder: false },
+          ticks: { color: 'rgba(17,24,39,0.35)', font: { family: 'Outfit', size: 11 }, maxTicksLimit: 11, maxRotation: 0 },
+          border: { display: false }
+        },
+        y: {
+          grid: { color: 'rgba(17,24,39,0.06)', drawBorder: false },
+          ticks: {
+            color: 'rgba(17,24,39,0.35)',
+            font: { family: 'Outfit', size: 11 },
+            callback: v => (v >= 1000 ? (v / 1000).toFixed(0) + ' k€' : v + ' €')
+          },
+          border: { display: false }
+        }
+      }
+    }
+  });
+
+  document.getElementById('finalPel').textContent = fmt(pelData[years]);
+  document.getElementById('finalAlt').textContent = fmt(altData[years]);
+  const diff = altData[years] - pelData[years];
+  const diffPct = (diff / pelData[years] * 100).toFixed(0);
+  document.getElementById('gainDiff').textContent = '+' + fmt(diff) + ' de plus que le PEL sur ' + years + ' ans';
+  document.getElementById('gainValue').textContent = '+' + fmt(diff);
+  document.getElementById('gainSub').textContent = 'Écart de capital final par rapport au PEL, sur ' + years + ' an' + (years > 1 ? 's' : '');
+  document.getElementById('gainPct').textContent = '+' + diffPct + ' %';
+  document.querySelectorAll('.result-card .rs')[0].textContent = 'Dans ' + years + ' an' + (years > 1 ? 's' : '');
+  document.getElementById('chartSub').textContent = "À capital de départ identique, l'écart de performance se creuse " + (years >= 15 ? 'fortement' : 'progressivement') + " dans le temps sous l'effet des intérêts composés.";
+}
+
+const yearSlider = document.getElementById('yearSlider');
+function updateYear() {
+  const y = parseInt(yearSlider.value);
+  document.getElementById('yearBubble').textContent = y;
+  yearSlider.style.setProperty('--pct', ((y - 1) / 29 * 100).toFixed(1) + '%');
+  buildChart(y);
+}
+yearSlider.addEventListener('input', updateYear);
+
+updateYear();
+</script>
+</body>
+</html>
